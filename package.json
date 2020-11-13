@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@lindorm-io/koa": "^0.1.0",
-    "@lindorm-io/redis": "^0.0.6",
+    "@lindorm-io/redis": "^0.0.7",
     "@lindorm-io/winston": "^0.1.0",
     "@types/hapi__joi": "^17.1.6",
     "@types/jest": "^26.0.15",

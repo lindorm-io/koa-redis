@@ -1,8 +1,8 @@
-import { IRedisMiddlewareContext, IRedisMiddlewareOptions } from "../types";
-import { RedisConnection, RedisConnectionType } from "@lindorm-io/redis";
+import { IRedisConnectionOptions, RedisConnection } from "@lindorm-io/redis";
+import { IRedisMiddlewareContext } from "../types";
 import { TPromise } from "@lindorm-io/core";
 
-export const redisMiddleware = (options: IRedisMiddlewareOptions) => async (
+export const redisMiddleware = (options: IRedisConnectionOptions) => async (
   ctx: IRedisMiddlewareContext,
   next: TPromise<void>,
 ): Promise<void> => {
@@ -11,11 +11,6 @@ export const redisMiddleware = (options: IRedisMiddlewareOptions) => async (
   ctx.redis = new RedisConnection(options);
 
   await ctx.redis.connect();
-
-  if (options.type === RedisConnectionType.MEMORY && options.clientRef) {
-    options.clientRef(ctx.redis.getClient());
-    ctx.logger.debug("redis client ref called");
-  }
 
   ctx.logger.debug("redis connection established");
 
@@ -27,8 +22,6 @@ export const redisMiddleware = (options: IRedisMiddlewareOptions) => async (
   try {
     await next();
   } finally {
-    if (options.type !== RedisConnectionType.MEMORY) {
-      await ctx.redis.disconnect();
-    }
+    await ctx.redis.disconnect();
   }
 };

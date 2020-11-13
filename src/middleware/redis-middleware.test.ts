@@ -1,8 +1,9 @@
 import MockDate from "mockdate";
-import { redisMiddleware } from "./redis-middleware";
-import { RedisConnection, RedisConnectionType, RedisInMemoryClient, TRedisClient } from "@lindorm-io/redis";
+import { IRedisConnectionOptions, RedisConnection, RedisConnectionType } from "@lindorm-io/redis";
+import { IRedisMiddlewareContext } from "../types";
 import { Logger, LogLevel } from "@lindorm-io/winston";
-import { IRedisMiddlewareOptions } from "../types";
+import { TObject, TPromise } from "@lindorm-io/core";
+import { redisMiddleware } from "./redis-middleware";
 
 jest.mock("uuid", () => ({
   v4: () => "e397bc49-849e-4df6-a536-7b9fa3574ace",
@@ -14,19 +15,21 @@ const logger = new Logger({ packageName: "n", packageVersion: "v" });
 logger.addConsole(LogLevel.ERROR);
 
 describe("redisMiddleware", () => {
-  let client: TRedisClient;
-  let options: IRedisMiddlewareOptions;
-  let ctx: any;
-  let next: any;
+  let inMemoryCache: TObject<any>;
+  let options: IRedisConnectionOptions;
+  let ctx: IRedisMiddlewareContext;
+  let next: TPromise<void>;
 
   beforeEach(() => {
+    inMemoryCache = { initialized: true };
+
     options = {
       type: RedisConnectionType.MEMORY,
       port: 100,
-      clientRef: (c) => {
-        client = c;
-      },
+      inMemoryCache,
     };
+
+    // @ts-ignore
     ctx = { logger };
     next = () => Promise.resolve();
   });
@@ -35,9 +38,11 @@ describe("redisMiddleware", () => {
     await expect(redisMiddleware(options)(ctx, next)).resolves.toBe(undefined);
 
     expect(ctx.redis).toStrictEqual(expect.any(RedisConnection));
-    expect(client).toStrictEqual(expect.any(RedisInMemoryClient));
 
+    const client = ctx.redis.getClient();
     await expect(client.set("key", { blob: "yes" })).resolves.toBe("OK");
     await expect(client.get("key")).resolves.toMatchSnapshot();
+
+    expect(inMemoryCache).toMatchSnapshot();
   });
 });

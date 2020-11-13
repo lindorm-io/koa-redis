@@ -5,3 +5,13 @@ Object {
   "blob": "yes",
 }
 `;
+
+exports[`redisMiddleware should set a functional redis on context 2`] = `
+Object {
+  "initialized": true,
+  "key": Object {
+    "blob": "{\\"json\\":{\\"blob\\":\\"yes\\"},\\"meta\\":{\\"blob\\":\\"string\\"}}",
+    "expiresInSeconds": undefined,
+  },
+}
+`;
