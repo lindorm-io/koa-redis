@@ -2,7 +2,6 @@ import MockDate from "mockdate";
 import { IRedisConnectionOptions, RedisConnection, RedisConnectionType } from "@lindorm-io/redis";
 import { IRedisMiddlewareContext } from "../types";
 import { Logger, LogLevel } from "@lindorm-io/winston";
-import { TObject, TPromise } from "@lindorm-io/core";
 import { redisMiddleware } from "./redis-middleware";
 
 jest.mock("uuid", () => ({
@@ -14,11 +13,12 @@ MockDate.set("2020-01-01 08:00:00.000");
 const logger = new Logger({ packageName: "n", packageVersion: "v" });
 logger.addConsole(LogLevel.ERROR);
 
+const next = jest.fn();
+
 describe("redisMiddleware", () => {
-  let inMemoryCache: TObject<any>;
+  let inMemoryCache: Record<string, any>;
   let options: IRedisConnectionOptions;
   let ctx: IRedisMiddlewareContext;
-  let next: TPromise<void>;
 
   beforeEach(() => {
     inMemoryCache = { initialized: true };
@@ -31,7 +31,6 @@ describe("redisMiddleware", () => {
 
     // @ts-ignore
     ctx = { logger };
-    next = () => Promise.resolve();
   });
 
   test("should set a functional redis on context", async () => {

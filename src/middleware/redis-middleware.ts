@@ -1,10 +1,9 @@
 import { IRedisConnectionOptions, RedisConnection } from "@lindorm-io/redis";
-import { IRedisMiddlewareContext } from "../types";
-import { TPromise } from "@lindorm-io/core";
+import { IRedisMiddlewareContext, TNext } from "../types";
 
 export const redisMiddleware = (options: IRedisConnectionOptions) => async (
   ctx: IRedisMiddlewareContext,
-  next: TPromise<void>,
+  next: TNext,
 ): Promise<void> => {
   const start = Date.now();
 
