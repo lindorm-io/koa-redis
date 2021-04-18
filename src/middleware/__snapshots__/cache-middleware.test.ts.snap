@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`cacheMiddleware should set cache on context 1`] = `
+Object {
+  "test": Test {},
+}
+`;
+
+exports[`cacheMiddleware should set cache with specific key 1`] = `
+Object {
+  "otherKey": Test {},
+}
+`;
