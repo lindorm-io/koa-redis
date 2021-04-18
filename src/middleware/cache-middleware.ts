@@ -14,7 +14,7 @@ export const cacheMiddleware = (Cache: typeof CacheBase, options?: CacheMiddlewa
 ): Promise<void> => {
   const start = Date.now();
 
-  const client = await ctx.redis.getClient();
+  const client = await ctx.client.redis.getClient();
   const logger = ctx.logger;
 
   /*

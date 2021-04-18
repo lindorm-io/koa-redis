@@ -25,15 +25,15 @@ describe("redisMiddleware", () => {
       inMemoryCache,
     };
 
-    ctx = { logger, metrics: {} };
+    ctx = { client: {}, logger, metrics: {} };
   });
 
   test("should set a functional redis on context", async () => {
     await expect(redisMiddleware(options)(ctx, next)).resolves.toBe(undefined);
 
-    expect(ctx.redis).toStrictEqual(expect.any(RedisConnection));
+    expect(ctx.client.redis).toStrictEqual(expect.any(RedisConnection));
 
-    const client = ctx.redis.getClient();
+    const client = ctx.client.redis.getClient();
     await expect(client.set("key", { blob: "yes" })).resolves.toBe("OK");
     await expect(client.get("key")).resolves.toMatchSnapshot();
 

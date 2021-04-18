@@ -3,5 +3,5 @@ import { IKoaAppContext } from "@lindorm-io/koa";
 
 export interface IKoaRedisContext extends IKoaAppContext {
   cache: Record<string, CacheBase<any>>;
-  redis: RedisConnection;
+  client: { redis: RedisConnection };
 }

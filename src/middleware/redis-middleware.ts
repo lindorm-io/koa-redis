@@ -8,9 +8,9 @@ export const redisMiddleware = (options: IRedisConnectionOptions): Middleware =>
 ): Promise<void> => {
   const start = Date.now();
 
-  ctx.redis = new RedisConnection(options);
+  ctx.client.redis = new RedisConnection(options);
 
-  await ctx.redis.connect();
+  await ctx.client.redis.connect();
 
   ctx.logger.debug("redis connection established");
 
@@ -19,6 +19,6 @@ export const redisMiddleware = (options: IRedisConnectionOptions): Middleware =>
   try {
     await next();
   } finally {
-    await ctx.redis.disconnect();
+    await ctx.client.redis.disconnect();
   }
 };
