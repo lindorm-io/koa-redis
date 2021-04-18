@@ -18,10 +18,11 @@
   ],
   "scripts": {
     "build": "tsc",
+    "check:lint": "eslint --ext .ts ./src/",
+    "check:lint:fix": "eslint --ext .ts ./src/ --fix",
+    "check:types": "tsc -p tsconfig.json --noEmit",
     "clean": "concurrently 'rimraf coverage' 'rimraf dist'",
     "coverage": "jest --coverage --forceExit",
-    "lint": "eslint --ext .ts ./src/",
-    "lint:fix": "eslint --ext .ts ./src/ --fix",
     "postversion": "git push --no-verify && git push --tags --no-verify",
     "prepublishOnly": "npm run clean && concurrently 'npm run build' 'npm run coverage'",
     "preversion": "npm run validate",
@@ -31,21 +32,20 @@
     "test": "jest --config jest.config.js --forceExit",
     "test:clear": "jest --clearCache",
     "test:watch": "jest --config jest.config.js --watch --",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
-    "update": "ncu -u && npm-check -yE && npm audit fix",
-    "validate": "npm run test:clear && npm run lint && npm run typecheck && npm run test"
+    "update": "npm-check -yE && ncu -u && npm audit fix",
+    "validate": "npm run test:clear && npm run check:lint && npm run check:types && npm run test"
   },
   "dependencies": {
     "lodash": "4.17.21"
   },
   "peerDependencies": {
-    "@lindorm-io/koa": "0.2.3",
-    "@lindorm-io/redis": "0.0.12",
-    "@lindorm-io/winston": "0.1.4"
+    "@lindorm-io/koa": ">=0.2.4",
+    "@lindorm-io/redis": ">=0.1.0",
+    "@lindorm-io/winston": ">=0.1.4"
   },
   "devDependencies": {
-    "@lindorm-io/koa": "0.2.3",
-    "@lindorm-io/redis": "0.0.12",
+    "@lindorm-io/koa": "0.2.4",
+    "@lindorm-io/redis": "0.1.0",
     "@lindorm-io/winston": "0.1.4",
     "@types/hapi__joi": "17.1.6",
     "@types/jest": "26.0.22",
