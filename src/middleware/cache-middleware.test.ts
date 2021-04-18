@@ -10,7 +10,7 @@ describe("cacheMiddleware", () => {
 
   beforeEach(() => {
     ctx = {
-      client: { redis: { getClient: () => "client" } },
+      client: { redis: { client: () => "client" } },
       logger,
       metrics: {},
       cache: {},

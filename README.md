@@ -14,9 +14,19 @@ This package has the following peer dependencies:
 
 ## Usage
 
+### Client Middleware
 ```typescript
 koaApp.addMiddleware(redisMiddleware({
   type: RedisConnectionType.CACHE,
   port: 6000,
 }));
+
+await ctx.client.redis.connect();
+```
+
+### Cache Middleware
+```typescript
+koaApp.addMiddleware(cacheMiddleware(YourCacheClass));
+
+await ctx.cache.yourCacheClass.create(yourEntity);
 ```

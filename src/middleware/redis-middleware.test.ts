@@ -33,7 +33,7 @@ describe("redisMiddleware", () => {
 
     expect(ctx.client.redis).toStrictEqual(expect.any(RedisConnection));
 
-    const client = ctx.client.redis.getClient();
+    const client = ctx.client.redis.client();
     await expect(client.set("key", { blob: "yes" })).resolves.toBe("OK");
     await expect(client.get("key")).resolves.toMatchSnapshot();
 

@@ -1,6 +1,6 @@
 import { Middleware, Next } from "koa";
 import { camelCase } from "lodash";
-import { CacheBase } from "@lindorm-io/redis";
+import { RedisCache } from "@lindorm-io/redis";
 import { IKoaRedisContext } from "../types";
 
 interface CacheMiddlewareOptions {
@@ -8,14 +8,11 @@ interface CacheMiddlewareOptions {
   expiresInSeconds?: number;
 }
 
-export const cacheMiddleware = (Cache: typeof CacheBase, options?: CacheMiddlewareOptions): Middleware => async (
+export const cacheMiddleware = (Cache: typeof RedisCache, options?: CacheMiddlewareOptions): Middleware => async (
   ctx: IKoaRedisContext,
   next: Next,
 ): Promise<void> => {
   const start = Date.now();
-
-  const client = await ctx.client.redis.getClient();
-  const logger = ctx.logger;
 
   /*
    * Ignoring TS here since Cache needs to be abstract
@@ -23,9 +20,9 @@ export const cacheMiddleware = (Cache: typeof CacheBase, options?: CacheMiddlewa
    */
   // @ts-ignore
   ctx.cache[camelCase(options?.key || Cache.name)] = new Cache({
-    client,
+    client: await ctx.client.redis.client(),
     expiresInSeconds: options?.expiresInSeconds,
-    logger,
+    logger: ctx.logger,
   });
 
   ctx.metrics.cache = (ctx.metrics.cache || 0) + (Date.now() - start);
