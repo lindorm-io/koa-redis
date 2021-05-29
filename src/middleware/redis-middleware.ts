@@ -1,24 +1,23 @@
+import { DefaultState, Middleware } from "koa";
 import { IKoaRedisContext } from "../types";
 import { IRedisConnectionOptions, RedisConnection } from "@lindorm-io/redis";
-import { Middleware, Next } from "koa";
 
-export const redisMiddleware = (options: IRedisConnectionOptions): Middleware => async (
-  ctx: IKoaRedisContext,
-  next: Next,
-): Promise<void> => {
-  const start = Date.now();
+export const redisMiddleware =
+  (options: IRedisConnectionOptions): Middleware<DefaultState, IKoaRedisContext> =>
+  async (ctx, next): Promise<void> => {
+    const start = Date.now();
 
-  ctx.client.redis = new RedisConnection(options);
+    ctx.client.redis = new RedisConnection(options);
 
-  await ctx.client.redis.connect();
+    await ctx.client.redis.connect();
 
-  ctx.logger.debug("redis connection established");
+    ctx.logger.debug("redis connection established");
 
-  ctx.metrics.redis = (ctx.metrics.redis || 0) + (Date.now() - start);
+    ctx.metrics.redis = (ctx.metrics.redis || 0) + (Date.now() - start);
 
-  try {
-    await next();
-  } finally {
-    await ctx.client.redis.disconnect();
-  }
-};
+    try {
+      await next();
+    } finally {
+      await ctx.client.redis.disconnect();
+    }
+  };
