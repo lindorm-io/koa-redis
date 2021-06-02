@@ -7,7 +7,7 @@ jest.mock("uuid", () => ({
   v4: () => "e397bc49-849e-4df6-a536-7b9fa3574ace",
 }));
 
-MockDate.set("2020-01-01 08:00:00.000");
+MockDate.set("2020-01-01T08:00:00.000Z");
 
 const next = () => Promise.resolve();
 
@@ -29,7 +29,7 @@ describe("redisMiddleware", () => {
   });
 
   test("should set a functional redis on context", async () => {
-    await expect(redisMiddleware(options)(ctx, next)).resolves.toBe(undefined);
+    await expect(redisMiddleware(options)(ctx, next)).resolves.toBeUndefined();
 
     expect(ctx.client.redis).toStrictEqual(expect.any(RedisConnection));
 
