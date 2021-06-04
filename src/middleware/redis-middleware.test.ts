@@ -1,5 +1,5 @@
 import MockDate from "mockdate";
-import { IRedisConnectionOptions, RedisConnection, RedisConnectionType } from "@lindorm-io/redis";
+import { RedisConnectionOptions, RedisConnection, RedisConnectionType } from "@lindorm-io/redis";
 import { redisMiddleware } from "./redis-middleware";
 import { logger } from "../test";
 
@@ -14,7 +14,7 @@ const next = () => Promise.resolve();
 describe("redisMiddleware", () => {
   let ctx: any;
   let inMemoryCache: Record<string, any>;
-  let options: IRedisConnectionOptions;
+  let options: RedisConnectionOptions;
 
   beforeEach(() => {
     inMemoryCache = { initialized: true };

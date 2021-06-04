@@ -1,9 +1,9 @@
-import { DefaultState, Middleware } from "koa";
-import { IKoaRedisContext } from "../types";
-import { IRedisConnectionOptions, RedisConnection } from "@lindorm-io/redis";
+import { Middleware } from "@lindorm-io/koa";
+import { RedisConnection, RedisConnectionOptions } from "@lindorm-io/redis";
+import { RedisContext } from "../types";
 
 export const redisMiddleware =
-  (options: IRedisConnectionOptions): Middleware<DefaultState, IKoaRedisContext> =>
+  (options: RedisConnectionOptions): Middleware<RedisContext> =>
   async (ctx, next): Promise<void> => {
     const start = Date.now();
 

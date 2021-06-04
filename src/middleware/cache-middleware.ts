@@ -1,6 +1,6 @@
-import { DefaultState, Middleware } from "koa";
-import { IKoaRedisContext } from "../types";
+import { Middleware } from "@lindorm-io/koa";
 import { RedisCache } from "@lindorm-io/redis";
+import { RedisContext } from "../types";
 import { camelCase } from "lodash";
 
 interface CacheMiddlewareOptions {
@@ -9,7 +9,7 @@ interface CacheMiddlewareOptions {
 }
 
 export const cacheMiddleware =
-  (Cache: typeof RedisCache, options?: CacheMiddlewareOptions): Middleware<DefaultState, IKoaRedisContext> =>
+  (Cache: typeof RedisCache, options?: CacheMiddlewareOptions): Middleware<RedisContext> =>
   async (ctx, next): Promise<void> => {
     const start = Date.now();
 
