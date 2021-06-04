@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`redisPoolMiddleware should automatically connect 1`] = `
+Object {
+  "blob": "yes",
+}
+`;
+
+exports[`redisPoolMiddleware should automatically connect 2`] = `
+Object {
+  "initialized": true,
+  "key": Object {
+    "blob": "{\\"json\\":{\\"blob\\":\\"yes\\"},\\"meta\\":{\\"blob\\":\\"string\\"}}",
+    "expiresInSeconds": undefined,
+  },
+}
+`;
+
+exports[`redisPoolMiddleware should set a functional redis on context 1`] = `
+Object {
+  "blob": "yes",
+}
+`;
+
+exports[`redisPoolMiddleware should set a functional redis on context 2`] = `
+Object {
+  "initialized": true,
+  "key": Object {
+    "blob": "{\\"json\\":{\\"blob\\":\\"yes\\"},\\"meta\\":{\\"blob\\":\\"string\\"}}",
+    "expiresInSeconds": undefined,
+  },
+}
+`;
