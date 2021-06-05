@@ -19,7 +19,7 @@ export const cacheMiddleware =
      */
     // @ts-ignore
     ctx.cache[camelCase(options?.key || Cache.name)] = new Cache({
-      client: await ctx.client.redis.client(),
+      client: ctx.client.redis.client(),
       expiresInSeconds: options?.expiresInSeconds,
       logger: ctx.logger,
     });

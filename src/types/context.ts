@@ -3,5 +3,7 @@ import { RedisCache, RedisConnection } from "@lindorm-io/redis";
 
 export interface RedisContext extends KoaContext {
   cache: Record<string, RedisCache>;
-  client: { redis: RedisConnection };
+  client: {
+    redis: RedisConnection;
+  };
 }
