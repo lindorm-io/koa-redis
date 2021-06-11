@@ -5,7 +5,7 @@ import { RedisContext } from "../types";
 export const redisMiddleware =
   (options: RedisConnectionOptions): Middleware<RedisContext> =>
   async (ctx, next): Promise<void> => {
-    const start = Date.now();
+    const metric = ctx.getMetric("redis");
 
     ctx.client.redis = new RedisConnection(options);
 
@@ -13,7 +13,7 @@ export const redisMiddleware =
 
     ctx.logger.debug("redis connection established");
 
-    ctx.metrics.redis = (ctx.metrics.redis || 0) + (Date.now() - start);
+    metric.end();
 
     try {
       await next();

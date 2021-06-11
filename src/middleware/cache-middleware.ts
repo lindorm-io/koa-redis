@@ -11,7 +11,7 @@ interface CacheMiddlewareOptions {
 export const cacheMiddleware =
   (Cache: typeof RedisCache, options?: CacheMiddlewareOptions): Middleware<RedisContext> =>
   async (ctx, next): Promise<void> => {
-    const start = Date.now();
+    const metric = ctx.getMetric("redis");
 
     /*
      * Ignoring TS here since Cache needs to be abstract
@@ -24,7 +24,7 @@ export const cacheMiddleware =
       logger: ctx.logger,
     });
 
-    ctx.metrics.cache = (ctx.metrics.cache || 0) + (Date.now() - start);
+    metric.end();
 
     await next();
   };

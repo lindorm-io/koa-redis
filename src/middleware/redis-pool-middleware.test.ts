@@ -2,6 +2,7 @@ import MockDate from "mockdate";
 import { RedisConnection, RedisConnectionType } from "@lindorm-io/redis";
 import { redisPoolMiddleware } from "./redis-pool-middleware";
 import { logger } from "../test";
+import { Metric } from "@lindorm-io/koa";
 
 jest.mock("uuid", () => ({
   v4: () => "e397bc49-849e-4df6-a536-7b9fa3574ace",
@@ -25,7 +26,12 @@ describe("redisPoolMiddleware", () => {
       inMemoryCache,
     });
 
-    ctx = { client: {}, logger, metrics: {} };
+    ctx = {
+      client: {},
+      logger,
+      metrics: {},
+    };
+    ctx.getMetric = (key: string) => new Metric(ctx, key);
   });
 
   test("should set a functional redis on context", async () => {
@@ -34,6 +40,7 @@ describe("redisPoolMiddleware", () => {
     await expect(redisPoolMiddleware(redis)(ctx, next)).resolves.toBeUndefined();
 
     expect(ctx.client.redis).toStrictEqual(expect.any(RedisConnection));
+    expect(ctx.metrics.redis).toStrictEqual(expect.any(Number));
 
     const client = ctx.client.redis.client();
     await expect(client.set("key", { blob: "yes" })).resolves.toBe("OK");
@@ -46,6 +53,7 @@ describe("redisPoolMiddleware", () => {
     await expect(redisPoolMiddleware(redis)(ctx, next)).resolves.toBeUndefined();
 
     expect(ctx.client.redis).toStrictEqual(expect.any(RedisConnection));
+    expect(ctx.metrics.redis).toStrictEqual(expect.any(Number));
 
     const client = ctx.client.redis.client();
     await expect(client.set("key", { blob: "yes" })).resolves.toBe("OK");

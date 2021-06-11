@@ -44,13 +44,13 @@
     "lodash": "4.17.21"
   },
   "peerDependencies": {
-    "@lindorm-io/koa": ">=0.2.15",
-    "@lindorm-io/redis": ">=0.2.2",
+    "@lindorm-io/koa": ">=0.2.20",
+    "@lindorm-io/redis": ">=0.2.3",
     "@lindorm-io/winston": ">=0.1.5"
   },
   "devDependencies": {
-    "@lindorm-io/koa": "0.2.15",
-    "@lindorm-io/redis": "0.2.2",
+    "@lindorm-io/koa": "0.2.20",
+    "@lindorm-io/redis": "0.2.3",
     "@lindorm-io/winston": "0.1.5",
     "@types/jest": "26.0.23",
     "@types/joi": "17.2.3",
@@ -58,10 +58,10 @@
     "@types/koa-bodyparser": "4.3.1",
     "@types/koa-router": "7.4.2",
     "@types/lodash": "4.14.170",
-    "@types/node": "15.6.2",
+    "@types/node": "15.12.2",
     "@types/redis": "^2.8.29",
-    "@typescript-eslint/eslint-plugin": "4.26.0",
-    "@typescript-eslint/parser": "4.26.0",
+    "@typescript-eslint/eslint-plugin": "4.26.1",
+    "@typescript-eslint/parser": "4.26.1",
     "eslint": "7.28.0",
     "husky": "6.0.0",
     "jest": "27.0.4",
@@ -71,7 +71,7 @@
     "mockdate": "3.0.5",
     "prettier": "2.3.1",
     "rimraf": "3.0.2",
-    "ts-jest": "27.0.2",
+    "ts-jest": "27.0.3",
     "ts-node": "10.0.0",
     "typescript": "4.3.2"
   }
