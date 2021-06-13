@@ -41,16 +41,19 @@
     "validate": "npm run test:clear && npm run check:lint && npm run check:types && npm test"
   },
   "dependencies": {
+    "@lindorm-io/errors": "^0.1.5",
     "lodash": "4.17.21"
   },
   "peerDependencies": {
+    "@lindorm-io/entity": ">=0.2.0",
     "@lindorm-io/koa": ">=0.2.21",
-    "@lindorm-io/redis": ">=0.2.4",
+    "@lindorm-io/redis": ">=0.3.0",
     "@lindorm-io/winston": ">=0.1.6"
   },
   "devDependencies": {
+    "@lindorm-io/entity": "^0.2.0",
     "@lindorm-io/koa": "0.2.21",
-    "@lindorm-io/redis": "0.2.4",
+    "@lindorm-io/redis": "0.3.0",
     "@lindorm-io/winston": "0.1.6",
     "@types/jest": "26.0.23",
     "@types/joi": "17.2.3",

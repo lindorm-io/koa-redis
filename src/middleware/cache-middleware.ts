@@ -1,5 +1,5 @@
+import { CacheBase } from "@lindorm-io/redis";
 import { Middleware } from "@lindorm-io/koa";
-import { RedisCache } from "@lindorm-io/redis";
 import { RedisContext } from "../types";
 import { camelCase } from "lodash";
 
@@ -9,16 +9,18 @@ interface CacheMiddlewareOptions {
 }
 
 export const cacheMiddleware =
-  (Cache: typeof RedisCache, options?: CacheMiddlewareOptions): Middleware<RedisContext> =>
+  (Cache: typeof CacheBase, options?: CacheMiddlewareOptions): Middleware<RedisContext> =>
   async (ctx, next): Promise<void> => {
     const metric = ctx.getMetric("redis");
+
+    const cache = options?.key || camelCase(Cache.name);
 
     /*
      * Ignoring TS here since Cache needs to be abstract
      * to ensure that all input at least attempts to be unique
      */
     // @ts-ignore
-    ctx.cache[camelCase(options?.key || Cache.name)] = new Cache({
+    ctx.cache[cache] = new Cache({
       client: ctx.client.redis.client(),
       expiresInSeconds: options?.expiresInSeconds,
       logger: ctx.logger,
