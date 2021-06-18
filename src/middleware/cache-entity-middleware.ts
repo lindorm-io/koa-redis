@@ -12,7 +12,8 @@ interface Options {
 }
 
 export const cacheEntityMiddleware =
-  (path: string, Entity: typeof EntityBase, Cache: typeof CacheBase, options?: Options): Middleware<RedisContext> =>
+  (Entity: typeof EntityBase, Cache: typeof CacheBase, options?: Options) =>
+  (path: string): Middleware<RedisContext> =>
   async (ctx, next): Promise<void> => {
     const metric = ctx.getMetric("entity");
 

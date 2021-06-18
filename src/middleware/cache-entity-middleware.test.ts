@@ -1,8 +1,8 @@
-import { logger } from "../test";
-import { Metric, Middleware } from "@lindorm-io/koa";
-import { cacheEntityMiddleware } from "./cache-entity-middleware";
 import { ClientError } from "@lindorm-io/errors";
 import { EntityNotFoundError } from "@lindorm-io/redis";
+import { Metric } from "@lindorm-io/koa";
+import { cacheEntityMiddleware } from "./cache-entity-middleware";
+import { logger } from "../test";
 
 class TestEntity {}
 class TestCache {}
@@ -11,7 +11,8 @@ const next = () => Promise.resolve();
 
 describe("cacheMiddleware", () => {
   let ctx: any;
-  let middleware: Middleware<any>;
+  let path: string;
+  let middleware: any;
 
   beforeEach(() => {
     ctx = {
@@ -27,8 +28,10 @@ describe("cacheMiddleware", () => {
     };
     ctx.getMetric = (key: string) => new Metric(ctx, key);
 
+    path = "request.body.identifier";
+
     // @ts-ignore
-    middleware = cacheEntityMiddleware("request.body.identifier", TestEntity, TestCache);
+    middleware = cacheEntityMiddleware(TestEntity, TestCache)(path);
   });
 
   test("should set entity on context", async () => {
@@ -40,9 +43,9 @@ describe("cacheMiddleware", () => {
 
   test("should find cache on context with options key", async () => {
     // @ts-ignore
-    middleware = cacheEntityMiddleware("request.body.identifier", TestEntity, TestCache, {
+    middleware = cacheEntityMiddleware(TestEntity, TestCache, {
       cacheKey: "cacheKey",
-    });
+    })(path);
 
     ctx.cache.cacheKey = { find: async () => new TestEntity() };
 
@@ -53,9 +56,9 @@ describe("cacheMiddleware", () => {
 
   test("should set entity on context with options key", async () => {
     // @ts-ignore
-    middleware = cacheEntityMiddleware("request.body.identifier", TestEntity, TestCache, {
+    middleware = cacheEntityMiddleware(TestEntity, TestCache, {
       entityKey: "entityKey",
-    });
+    })(path);
 
     await expect(middleware(ctx, next)).resolves.toBeUndefined();
 
@@ -64,9 +67,9 @@ describe("cacheMiddleware", () => {
 
   test("should succeed when identifier is optional", async () => {
     // @ts-ignore
-    middleware = cacheEntityMiddleware("request.body.identifier", TestEntity, TestCache, {
+    middleware = cacheEntityMiddleware(TestEntity, TestCache, {
       optional: true,
-    });
+    })(path);
 
     ctx.request.body.identifier = undefined;
 
