@@ -5,21 +5,24 @@ import { Middleware } from "@lindorm-io/koa";
 import { RedisContext } from "../types";
 import { camelCase, get, isString } from "lodash";
 
-interface Options {
+interface MiddlewareOptions {
   cacheKey?: string;
   entityKey?: string;
+}
+
+interface Options {
   optional?: boolean;
 }
 
 export const cacheEntityMiddleware =
-  (Entity: typeof EntityBase, Cache: typeof CacheBase, options?: Options) =>
-  (path: string): Middleware<RedisContext> =>
+  (Entity: typeof EntityBase, Cache: typeof CacheBase, middlewareOptions: MiddlewareOptions = {}) =>
+  (path: string, options: Options = {}): Middleware<RedisContext> =>
   async (ctx, next): Promise<void> => {
     const metric = ctx.getMetric("entity");
 
     const key = get(ctx, path);
 
-    if (!isString(key) && options?.optional) {
+    if (!isString(key) && options.optional) {
       ctx.logger.debug("Optional entity identifier not found", { path });
 
       metric.end();
@@ -35,8 +38,8 @@ export const cacheEntityMiddleware =
       });
     }
 
-    const entity = options?.entityKey || camelCase(Entity.name);
-    const cache = options?.cacheKey || camelCase(Cache.name);
+    const entity = middlewareOptions.entityKey || camelCase(Entity.name);
+    const cache = middlewareOptions.cacheKey || camelCase(Cache.name);
 
     try {
       ctx.entity[entity] = await ctx.cache[cache].find(key);

@@ -10,11 +10,14 @@ class TestCache {}
 const next = () => Promise.resolve();
 
 describe("cacheMiddleware", () => {
+  let middlewareOptions: any;
+  let options: any;
   let ctx: any;
   let path: string;
-  let middleware: any;
 
   beforeEach(() => {
+    middlewareOptions = {};
+    options = {};
     ctx = {
       cache: {
         testCache: {
@@ -29,51 +32,50 @@ describe("cacheMiddleware", () => {
     ctx.getMetric = (key: string) => new Metric(ctx, key);
 
     path = "request.body.identifier";
-
-    // @ts-ignore
-    middleware = cacheEntityMiddleware(TestEntity, TestCache)(path);
   });
 
   test("should set entity on context", async () => {
-    await expect(middleware(ctx, next)).resolves.toBeUndefined();
+    await expect(
+      // @ts-ignore
+      cacheEntityMiddleware(TestEntity, TestCache, middlewareOptions)(path, options)(ctx, next),
+    ).resolves.toBeUndefined();
 
     expect(ctx.entity.testEntity).toStrictEqual(expect.any(TestEntity));
     expect(ctx.metrics.entity).toStrictEqual(expect.any(Number));
   });
 
   test("should find cache on context with options key", async () => {
-    // @ts-ignore
-    middleware = cacheEntityMiddleware(TestEntity, TestCache, {
-      cacheKey: "cacheKey",
-    })(path);
+    middlewareOptions.cacheKey = "cacheKey";
 
     ctx.cache.cacheKey = { find: async () => new TestEntity() };
 
-    await expect(middleware(ctx, next)).resolves.toBeUndefined();
+    await expect(
+      // @ts-ignore
+      cacheEntityMiddleware(TestEntity, TestCache, middlewareOptions)(path, options)(ctx, next),
+    ).resolves.toBeUndefined();
 
     expect(ctx.entity.testEntity).toStrictEqual(expect.any(TestEntity));
   });
 
   test("should set entity on context with options key", async () => {
-    // @ts-ignore
-    middleware = cacheEntityMiddleware(TestEntity, TestCache, {
-      entityKey: "entityKey",
-    })(path);
+    middlewareOptions.entityKey = "entityKey";
 
-    await expect(middleware(ctx, next)).resolves.toBeUndefined();
+    await expect(
+      // @ts-ignore
+      cacheEntityMiddleware(TestEntity, TestCache, middlewareOptions)(path, options)(ctx, next),
+    ).resolves.toBeUndefined();
 
     expect(ctx.entity.entityKey).toStrictEqual(expect.any(TestEntity));
   });
 
   test("should succeed when identifier is optional", async () => {
-    // @ts-ignore
-    middleware = cacheEntityMiddleware(TestEntity, TestCache, {
-      optional: true,
-    })(path);
-
+    options.optional = true;
     ctx.request.body.identifier = undefined;
 
-    await expect(middleware(ctx, next)).resolves.toBeUndefined();
+    await expect(
+      // @ts-ignore
+      cacheEntityMiddleware(TestEntity, TestCache, middlewareOptions)(path, options)(ctx, next),
+    ).resolves.toBeUndefined();
 
     expect(ctx.entity.testEntity).toBeUndefined();
   });
@@ -81,12 +83,18 @@ describe("cacheMiddleware", () => {
   test("should throw ClientError when identifier is missing", async () => {
     ctx.request.body.identifier = undefined;
 
-    await expect(middleware(ctx, next)).rejects.toThrow(ClientError);
+    await expect(
+      // @ts-ignore
+      cacheEntityMiddleware(TestEntity, TestCache, middlewareOptions)(path, options)(ctx, next),
+    ).rejects.toThrow(ClientError);
   });
 
   test("should throw ClientError when entity is missing", async () => {
     ctx.cache.testCache.find.mockRejectedValue(new EntityNotFoundError("message"));
 
-    await expect(middleware(ctx, next)).rejects.toThrow(ClientError);
+    await expect(
+      // @ts-ignore
+      cacheEntityMiddleware(TestEntity, TestCache, middlewareOptions)(path, options)(ctx, next),
+    ).rejects.toThrow(ClientError);
   });
 });
