@@ -10,13 +10,13 @@ interface MiddlewareOptions {
   entityKey?: string;
 }
 
-interface Options {
+export interface CacheEntityMiddlewareOptions {
   optional?: boolean;
 }
 
 export const cacheEntityMiddleware =
   (Entity: typeof EntityBase, Cache: typeof CacheBase, middlewareOptions: MiddlewareOptions = {}) =>
-  (path: string, options: Options = {}): Middleware<RedisContext> =>
+  (path: string, options: CacheEntityMiddlewareOptions = {}): Middleware<RedisContext> =>
   async (ctx, next): Promise<void> => {
     const metric = ctx.getMetric("entity");
 
